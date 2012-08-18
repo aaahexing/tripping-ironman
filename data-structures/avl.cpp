@@ -1,3 +1,4 @@
+#include <queue>
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -22,14 +23,21 @@ public:
 	}
 
 	~AVLTree() {
-		if (root->lson) {
-			delete root->lson;
+		if (root) {
+			queue<AVLTreeNode*> Q;
+			Q.push(root);
+			while (!Q.empty()) {
+				root = Q.front(); Q.pop();
+				if (root->lson) {
+					Q.push(root->lson);
+				}
+				if (root->rson) {
+					Q.push(root->rson);
+				}
+				delete root;
+			}
+			root = NULL;		
 		}
-		if (root->rson) {
-			delete root->rson;
-		}
-		delete root;
-		root = NULL;
 	}
 
 	inline int getHeight(AVLTreeNode *r) {

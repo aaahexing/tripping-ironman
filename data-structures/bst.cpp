@@ -1,3 +1,4 @@
+#include <queue>
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -17,14 +18,21 @@ public:
 	}
 
 	~BinarySearchTree() {
-		if (root->lson) {
-			delete root->lson;
+		if (root) {
+			queue<TreeNode*> Q;
+			Q.push(root);
+			while (!Q.empty()) {
+				root = Q.front(); Q.pop();
+				if (root->lson) {
+					Q.push(root->lson);
+				}
+				if (root->rson) {
+					Q.push(root->rson);
+				}
+				delete root;
+			}
+			root = NULL;		
 		}
-		if (root->rson) {
-			delete root->rson;
-		}
-		delete root;
-		root = NULL;
 	}
 
 	TreeNode* findMin(TreeNode *r) {
