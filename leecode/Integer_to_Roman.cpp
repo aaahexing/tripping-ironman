@@ -1,58 +1,56 @@
 #include <cstdio>
-#include <cstring>
+#include <string>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 class Solution {
 public:
-	static const char *symbols;
-	static const int values[];
-	string digitToRoman(int digit, int i) {
-		string ret = "";
-		if (digit <= 3) {
-			for (int j = 0; j < digit; ++j) {
-				ret += symbols[i + 1];
-			}
-		} else if (digit == 9) {
-			ret += symbols[i + 1];
-			ret += symbols[i - 1];
-		} else if (digit == 4) {
-			ret += symbols[i + 1];
-			ret += symbols[i];
+    string digit(int d, int u) {
+        const string units = "IVXLCDM";
+        string ret = "";
+        if (d < 4) {
+            for (int i = 0; i < d; ++i) {
+                ret += units[u];
+            }
+        } else if (d == 4) {
+            ret += units[u];
+            ret += units[u + 1];
+        } else if (d == 5) {
+            ret += units[u + 1];
+        } else if (d >= 6 && d <= 8){
+            ret += units[u + 1];
+            for (int i = 0; i < d - 5; ++i) {
+                ret += units[u];
+            }
+        } else if (d == 9) {
+			ret += units[u];
+			ret += units[u + 2];
 		} else {
-			ret += symbols[i];
-			for (int j = 0; j < digit - 5; ++j) {
-				ret += symbols[i + 1];
-			}
+			ret += units[u + 2];
 		}
-		return ret;
-	}
-	string intToRoman(int num) {
-		string ret = "";
-		if (num >= 1000) {
-			for (int i = 0; i < num / 1000; ++i) {
-				ret += symbols[0];
-			}
-			num %= 1000;
-		}
-		for (int i = 1; i <= 5; i += 2) {
-			if (num >= values[i + 1]) {
-				ret += digitToRoman(num / values[i + 1], i);
-				num %= values[i + 1];
-			}
-		}
-		return ret;
-	}
+        return ret;
+    }
+    string intToRoman(int num) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function    
+        string ret = "";
+        int f = 1000;
+        for (int u = 6; u >= 0; u -= 2) {
+            if (num >= f) {
+                ret += digit(num / f, u);
+                num -= num / f * f;
+            }
+            f /= 10;
+        }
+        return ret;
+    }
 };
 
-const char* Solution::symbols = "MDCLXVI";
-const int Solution::values[] = { 1000, 500, 100, 50, 10, 5, 1 };
-
 int main() {
-	int num;
 	Solution s;
-	while (cin >> num) {
-		cout << s.intToRoman(num) << endl;
-	}
+	cout << s.intToRoman(1) << endl;
+	cout << s.intToRoman(2012) << endl;
 	return 0;
 }
+
